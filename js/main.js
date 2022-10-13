@@ -1104,7 +1104,7 @@ function updateQuickTaskDisplay(taskType) {
 	var quickTaskDisplayElement = document.getElementById('quickTaskDisplay')
 	var progressBar = quickTaskDisplayElement.getElementsByClassName(taskType)[0]
 	progressBar.getElementsByClassName('name')[0].textContent =
-		currentTask.name + ' lvl ' + currentTask.level
+		currentTask.name + ' lvl ' + applyNumberLocaleFormat(currentTask.level, 0)
 	progressBar.getElementsByClassName('progressFill')[0].style.width =
 		(currentTask.xp / currentTask.getMaxXp()) * 100 + '%'
 }
@@ -1196,7 +1196,7 @@ function updateTaskRows() {
 	for (key in gameData.taskData) {
 		var task = gameData.taskData[key]
 		var row = document.getElementById('row ' + task.name)
-		row.getElementsByClassName('level')[0].textContent = task.level
+		row.getElementsByClassName('level')[0].textContent = applyNumberLocaleFormat(task.level, 0)
 		row.getElementsByClassName('xpGain')[0].textContent = format(task.getXpGain())
 		row.getElementsByClassName('xpLeft')[0].textContent = format(task.getXpLeft())
 
@@ -1267,9 +1267,15 @@ function updateHeaderRows(categories) {
 
 function updateText() {
 	//Sidebar
-	document.getElementById('ageDisplay').textContent = daysToYears(gameData.days)
+	document.getElementById('ageDisplay').textContent = applyNumberLocaleFormat(
+		daysToYears(gameData.days),
+		0
+	)
 	document.getElementById('dayDisplay').textContent = getDay()
-	document.getElementById('lifespanDisplay').textContent = daysToYears(getLifespan())
+	document.getElementById('lifespanDisplay').textContent = applyNumberLocaleFormat(
+		daysToYears(getLifespan()),
+		0
+	)
 	document.getElementById('pauseButton').textContent = gameData.paused ? 'Play' : 'Pause'
 
 	formatCoins(gameData.coins, document.getElementById('coinDisplay'))
@@ -1278,13 +1284,15 @@ function updateText() {
 	formatCoins(getIncome(), document.getElementById('incomeDisplay'))
 	formatCoins(getExpense(), document.getElementById('expenseDisplay'))
 
-	document.getElementById('happinessDisplay').textContent = getHappiness().toFixed(1)
+	document.getElementById('happinessDisplay').textContent = applyNumberLocaleFormat(getHappiness())
 
-	document.getElementById('evilDisplay').textContent = gameData.evil.toFixed(1)
-	document.getElementById('evilGainDisplay').textContent = getEvilGain().toFixed(1)
+	document.getElementById('evilDisplay').textContent = applyNumberLocaleFormat(gameData.evil)
+	document.getElementById('evilGainDisplay').textContent = applyNumberLocaleFormat(getEvilGain())
 
-	document.getElementById('essenceDisplay').textContent = gameData.essence.toFixed(1)
-	document.getElementById('essenceGainDisplay').textContent = getEssenceGain().toFixed(1)
+	document.getElementById('essenceDisplay').textContent = applyNumberLocaleFormat(gameData.essence)
+	document.getElementById('essenceGainDisplay').textContent = applyNumberLocaleFormat(
+		getEssenceGain()
+	)
 
 	document.getElementById('timeWarpingDisplay').textContent =
 		'x' +
@@ -1488,6 +1496,18 @@ function format(number, decimals = 1) {
 	var scaled = number / scale
 	// format number and add suffix
 	return scaled.toFixed(decimals) + suffix
+}
+
+/**
+ * @param {number} toFormat
+ * @param {number} decimals
+ * @returns {number}
+ */
+function applyNumberLocaleFormat(toFormat, decimals = 1) {
+	return toFormat.toLocaleString(undefined, {
+		maximumFractionDigits: decimals,
+		minimumFractionDigits: decimals,
+	})
 }
 
 function formatCoins(coins, element) {
