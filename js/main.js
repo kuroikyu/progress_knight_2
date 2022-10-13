@@ -1845,18 +1845,17 @@ window.addEventListener('keydown', function (e) {
 	if (e.key == 'p' || e.key == 'P')
 		document.getElementById('autoPromote').checked = !document.getElementById('autoPromote').checked
 })
-
 ;(function () {
 	let span = document.createElement('span')
-	let div = document.createElement('div')
-	div.classList.add('inline')
-	div.textContent = 'Auto-pause(Void)'
-	span.append(div)
+	let label = document.createElement('label')
+	label.classList.add('inline')
+	label.textContent = 'Auto-pause (Void) '
+	span.append(label)
 	let checkbox = document.createElement('input')
 	checkbox.type = 'checkbox'
 	checkbox.classList.add('inline')
 	checkbox.id = 'autoPause'
-	span.append(checkbox)
+	label.append(checkbox)
 	document.querySelector('span#automation').prepend(document.createElement('br'))
 	document.querySelector('span#automation').prepend(span)
 	increaseDays = () => {
